@@ -1,0 +1,11 @@
+{
+  "name": "ecdsa-zk-verify",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "circomlib": "^2.0.5"
+  },
+  "devDependencies": {
+    "snarkjs": "^0.4.27"
+  }
+}

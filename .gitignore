@@ -1,0 +1,12 @@
+
+/*_js/
+/node_modules
+keys/
+
+*.ptau
+*.r1cs
+*.zkey
+
+yarn-error.log
+input.json
+setup-phase2.sh
