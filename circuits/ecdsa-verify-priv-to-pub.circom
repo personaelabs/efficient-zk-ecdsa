@@ -2,10 +2,6 @@ pragma circom 2.0.2;
 
 include "./circom-ecdsa-circuits/ecdsa.circom";
 
-template Secp256k1ScalarMultWithPreCompute(n, k) {
-    // TODO: Implement this
-}
-
 // n: bits per register
 // k: number of registers
 template ECDSAVerify(n, k) {
@@ -22,6 +18,12 @@ template ECDSAVerify(n, k) {
         msg2ToPubKey.privkey[i] <== msg2[i];
     }
 
+    /*
+    Important:
+    Since ECDSAPrivToPub will use the standard generator point,
+    we need to use a different template that can do the 
+    scalar multiplication with pre-computes that are passed at runtime.
+    */
     component rToPubKey = ECDSAPrivToPub(n, k);
     for (var i = 0; i < k; i++) {
         rToPubKey.privkey[i] <== r[i];
