@@ -10,3 +10,5 @@ keys/
 yarn-error.log
 input.json
 setup-phase2.sh
+
+.DS_Store
