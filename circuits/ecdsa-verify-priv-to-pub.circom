@@ -6,7 +6,7 @@ include "./circom-ecdsa-circuits/ecdsa.circom";
 // k: number of registers
 template ECDSAVerify(n, k) {
     signal input msg2[k]; // message 2 (256bits)
-    signal input r[k]; // r (256bits?)
+    signal input r[k]; // r (256bits)
     signal input pubKey[2][k]; // Pubkey
     signal input pubKeyPreComputes[2][256]; // PubKey pre computations
 
