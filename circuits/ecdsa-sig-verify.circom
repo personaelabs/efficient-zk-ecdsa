@@ -1,6 +1,7 @@
 pragma circom 2.0.2;
-
+include "./circom-ecdsa-circuits/bigint_func.circom";
 include "./circom-ecdsa-circuits/ecdsa.circom";
+include "./secp256k1_scalar_mult_cached_windowed.circom";
 
 // n: bits per register
 // k: number of registers
@@ -17,13 +18,20 @@ template ECDSAVerify(n, k) {
         msgMultG.privkey[i] <== msg[i];
     }
 
-    /*
-    Important:
-    Since ECDSAPrivToPub will use the standard generator point,
-    we need to use a different template that can do the 
-    scalar multiplication with pre-computes that are passed at runtime.
-    */
-    component rMultPubKey = ECDSAPrivToPub(n, k);
+    component rMultPubKey = Secp256K1ScalarMultCachedWindowed(n, k);
+
+    var stride = 8;
+    var num_strides = div_ceil(n * k, stride);
+
+    for (var i = 0; i < num_strides; i++) {
+        for (var j = 0; j < 2 ** stride; j++) {
+            for (var l = 0; l < k; l++) {
+                rMultPubKey.pointPreComputes[i][j][0][l] <== pubKeyPreComputes[i][j][0][l];
+                rMultPubKey.pointPreComputes[i][j][1][l] <== pubKeyPreComputes[i][j][1][l];
+            }
+        }
+    }
+
     for (var i = 0; i < k; i++) {
         rMultPubKey.privkey[i] <== r[i];
     }
@@ -36,7 +44,7 @@ template ECDSAVerify(n, k) {
         derivedPubKey2.b[0][i] <== rMultPubKey.pubkey[0][i];
         derivedPubKey2.b[1][i] <== rMultPubKey.pubkey[1][i];
     }
-
+    
     for (var i = 0; i < k; i++) {
         pubKey2[0][i] === derivedPubKey2.out[0][i];
         pubKey2[1][i] === derivedPubKey2.out[1][i];
