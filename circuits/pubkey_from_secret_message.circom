@@ -4,9 +4,11 @@ include "./circom-ecdsa-circuits/ecdsa.circom";
 include "./circom-ecdsa-circuits/zk-identity/eth.circom";
 include "./secp256k1_scalar_mult_cached_windowed.circom";
 
+// Compute the public key and its corresponding address by computing the follwoing:
+// pubKey =  pubKey2 * r^-1 - msg * r^-1 * G
 template PubKeyFromSecretMessage(n, k) {
     signal input msg[k]; // secret message 
-    signal input modInvRMultPubKey2[2][k]; // r^-1 * pubKey2
+    signal input modInvRMultPubKey2[2][k]; // -(r^-1 * pubKey2)
     signal input modInvRMultGPreComputes[32][256][2][4];  // Pre computes for r^-1 * G
 
     // The address should be hidden in real-world applications.
@@ -33,7 +35,7 @@ template PubKeyFromSecretMessage(n, k) {
     }
 
 
-    // pubLe
+    // msg * -(r^-1 * G) + r^-1 * pubKey2
     component pubKey = Secp256k1AddUnequal(n, k);
     for (var i = 0; i < k; i++) {
         pubKey.a[0][i] <== msgMultCachedPoint.pubkey[0][i];
