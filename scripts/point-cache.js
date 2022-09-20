@@ -2,12 +2,7 @@ const elliptic = require("@DanTehrani/elliptic");
 const ec = new elliptic.ec("secp256k1");
 const BN = require("bn.js");
 const { splitToRegisters } = require("./utils");
-const { STRIDE, NUM_STRIDES } = require("./config");
-
-const SECP256K1_N = new BN(
-  "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
-  16
-);
+const { STRIDE, NUM_STRIDES, SECP256K1_N } = require("./config");
 
 const ecCachedWindowed = point => {
   const keyPoint = ec.keyFromPublic({
@@ -42,15 +37,6 @@ const computeModInvRMultGCache = r => {
   return ecCachedWindowed(ec.curve.g.mul(modInvR).neg());
 };
 
-const computeModInvRMultPubKey2 = (r, pubKey2) => {
-  const rRed = new BN(r);
-  const modInvR = rRed.invm(SECP256K1_N); // r^-1
-
-  const modInvRMultPubKey2 = pubKey2.mul(modInvR); // pubKey2 * r^-1
-  return modInvRMultPubKey2;
-};
-
 module.exports = {
-  computeModInvRMultGCache,
-  computeModInvRMultPubKey2
+  computeModInvRMultGCache
 };

@@ -4,17 +4,14 @@ const {
   ecsign,
   privateToAddress
 } = require("@ethereumjs/util");
-const { BASE_R_SECP256K1_TEMPLATE } = require("./config");
+const { BASE_R_SECP256K1_TEMPLATE, SECP256K1_N } = require("./config");
 const elliptic = require("@DanTehrani/elliptic");
 const EC = require("@DanTehrani/elliptic").ec;
 const defineCurve = require("@DanTehrani/elliptic").curves.defineCurve;
 const ec = new elliptic.ec("secp256k1");
 const BN = require("bn.js");
 const { splitToRegisters } = require("./utils");
-const {
-  computeModInvRMultGCache,
-  computeModInvRMultPubKey2
-} = require("./point-cache");
+const { computeModInvRMultGCache } = require("./point-cache");
 const { downloadZKey } = require("./download-zkey");
 const fs = require("fs");
 const crypto = require("crypto");
@@ -24,6 +21,15 @@ const privKey = BigInt(
 );
 
 const MSG_2 = hashPersonalMessage(Buffer.from("This message should be public"));
+
+// Compute r^-1 * pubKey2
+const computeModInvRMultPubKey2 = (r, pubKey2) => {
+  const rRed = new BN(r);
+  const modInvR = rRed.invm(SECP256K1_N); // r^-1
+
+  const modInvRMultPubKey2 = pubKey2.mul(modInvR); // pubKey2 * r^-1
+  return modInvRMultPubKey2;
+};
 
 const prove = async () => {
   if (!fs.existsSync("circuit.zkey")) {
@@ -55,6 +61,7 @@ const prove = async () => {
     "hex"
   );
 
+  // Define a curve with generator point R
   defineCurve("r", {
     ...BASE_R_SECP256K1_TEMPLATE,
     g: [rPoint.pub.x.toString("hex"), rPoint.pub.y.toString("hex")]
@@ -68,7 +75,6 @@ const prove = async () => {
   const r2 = sig2.r;
   const s2 = sig2.s;
 
-  // The y coordinate should be correct (odd or even)
   const r2Point = ec.keyFromPublic(
     ec.curve.pointFromX(r2, sig2.recoveryParam).encode("hex"),
     "hex"
@@ -78,7 +84,6 @@ const prove = async () => {
   const pubKey2 = rPoint.getPublic().mul(new BN(s));
 
   // Verify the second signature by checking s2 * R2 = msg2 * R + r2 * pubKey2
-  // This should be done on a smart contract
   const s2MulR2 = r2Point.getPublic().mul(s2);
   const msg2MulR = rPoint.getPublic().mul(MSG_2);
   const r2MulPubKey2 = ec
