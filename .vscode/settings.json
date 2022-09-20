@@ -1,0 +1,5 @@
+{
+  "cSpell.words": ["groth", "SECP", "snarkjs", "ecsign", "zkey"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true
+}
