@@ -1,4 +1,5 @@
 const hash = require("hash.js");
+const BN = require("bn.js");
 
 const STRIDE = 8n;
 const NUM_STRIDES = 256n / STRIDE; // = 32
@@ -19,9 +20,15 @@ const BASE_R_SECP256K1_TEMPLATE = {
   ]
 };
 
+const SECP256K1_N = new BN(
+  "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141",
+  16
+);
+
 module.exports = {
   STRIDE,
   NUM_STRIDES,
   REGISTERS,
-  BASE_R_SECP256K1_TEMPLATE
+  BASE_R_SECP256K1_TEMPLATE,
+  SECP256K1_N
 };
