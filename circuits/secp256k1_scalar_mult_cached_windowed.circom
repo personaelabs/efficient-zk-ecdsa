@@ -1,8 +1,12 @@
+pragma circom 2.0.2;
+
 include "./circom-ecdsa-circuits/bigint.circom";
+include "./circom-ecdsa-circuits/ecdsa.circom";
 include "./circom-ecdsa-circuits/bigint_func.circom";
 include "../node_modules/circomlib/circuits/multiplexer.circom";
 include "../node_modules/circomlib/circuits/comparators.circom";
 
+// Based on ECDSAPrivToPub by circom-ecdsa
 template Secp256K1ScalarMultCachedWindowed(n, k) {
     var stride = 8;
     signal input privkey[k];
@@ -30,7 +34,7 @@ template Secp256K1ScalarMultCachedWindowed(n, k) {
     for (var i = 0; i < num_strides; i++) {
         selectors[i] = Bits2Num(stride);
         for (var j = 0; j < stride; j++) {
-            var bit_idx1 = (i * stride + j) \ n;
+            var bit_idx1 = (i * stride + j) \ n; 
             var bit_idx2 = (i * stride + j) % n;
             if (bit_idx1 < k) {
                 selectors[i].in[j] <== n2b[bit_idx1].out[bit_idx2];
