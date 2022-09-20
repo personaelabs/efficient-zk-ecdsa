@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
-    "circomlib": "^2.0.5"
+    "@ethereumjs/util": "^8.0.0",
+    "circomlib": "^2.0.5",
+    "@DanTehrani/elliptic": "https://github.com/DanTehrani/elliptic.git"
   },
   "devDependencies": {
+    "eslint": "^8.23.1",
+    "prettier": "^2.7.1",
     "snarkjs": "^0.4.27"
   }
 }
