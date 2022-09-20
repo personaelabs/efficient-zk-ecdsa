@@ -2,7 +2,9 @@
   "name": "ecdsa-zk-verify",
   "version": "1.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prove": "node ./scripts/prove.js"
+  },
   "dependencies": {
     "@DanTehrani/elliptic": "https://github.com/DanTehrani/elliptic.git",
     "@ethereumjs/util": "^8.0.0",
