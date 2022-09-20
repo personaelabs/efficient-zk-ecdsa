@@ -1,32 +1,20 @@
-pragma circom 2.0.2;
+pragma circom 2.0.6;
 include "./circom-ecdsa-circuits/bigint_func.circom";
 include "./circom-ecdsa-circuits/ecdsa.circom";
+include "./circom-ecdsa-circuits/zk-identity/eth.circom";
 include "./secp256k1_scalar_mult_cached_windowed.circom";
-include "../node_modules/circomlib/circuits/poseidon.circom";
-include "tree.circom";
 
-// n: bits per register
-// k: number of registers
-// nLevels: level of the merkle tree
-template ProofOfMembership(n, k, nLevels) {
-    signal input msg[k]; // message 
-    signal input r[k]; // r
-    signal input pubKey[2][k]; // Pubkey
-    signal input pubKeyPreComputes[32][256][2][4]; // PubKey pre computations
-    signal input pubKey2[2][k]; // PubKey2
+template PubKeyFromSecretMessage(n, k) {
+    signal input msg[k]; // secret message 
+    signal input modInvRMultPubKey2[2][k]; // r^-1 * pubKey2
+    signal input modInvRMultGPreComputes[32][256][2][4];  // Pre computes for r^-1 * G
 
-    signal input leaf;
-    signal input treeSiblings[nLevels];
-    signal input treePathIndices[nLevels];
-    signal output root;
+    // The address should be hidden in real-world applications.
+    // This circuit outputs the address only for demonstration purposes.
+    signal output addr;
 
-    // msg * G
-    component msgMultG = ECDSAPrivToPub(n, k);
-    for (var i = 0; i < k; i++) {
-        msgMultG.privkey[i] <== msg[i];
-    }
-
-    component rMultPubKey = Secp256K1ScalarMultCachedWindowed(n, k);
+    // msg * r^-1 * G
+    component msgMultCachedPoint = Secp256K1ScalarMultCachedWindowed(n, k);
 
     var stride = 8;
     var num_strides = div_ceil(n * k, stride);
@@ -34,50 +22,43 @@ template ProofOfMembership(n, k, nLevels) {
     for (var i = 0; i < num_strides; i++) {
         for (var j = 0; j < 2 ** stride; j++) {
             for (var l = 0; l < k; l++) {
-                rMultPubKey.pointPreComputes[i][j][0][l] <== pubKeyPreComputes[i][j][0][l];
-                rMultPubKey.pointPreComputes[i][j][1][l] <== pubKeyPreComputes[i][j][1][l];
+                msgMultCachedPoint.pointPreComputes[i][j][0][l] <== modInvRMultGPreComputes[i][j][0][l];
+                msgMultCachedPoint.pointPreComputes[i][j][1][l] <== modInvRMultGPreComputes[i][j][1][l];
             }
         }
     }
 
     for (var i = 0; i < k; i++) {
-        rMultPubKey.privkey[i] <== r[i];
+        msgMultCachedPoint.privkey[i] <== msg[i];
     }
 
-    // msg * G + r * PubKey
-    component derivedPubKey2 = Secp256k1AddUnequal(n, k);
+
+    // pubLe
+    component pubKey = Secp256k1AddUnequal(n, k);
     for (var i = 0; i < k; i++) {
-        derivedPubKey2.a[0][i] <== msgMultG.pubkey[0][i];
-        derivedPubKey2.a[1][i] <== msgMultG.pubkey[1][i];
-        derivedPubKey2.b[0][i] <== rMultPubKey.pubkey[0][i];
-        derivedPubKey2.b[1][i] <== rMultPubKey.pubkey[1][i];
+        pubKey.a[0][i] <== msgMultCachedPoint.pubkey[0][i];
+        pubKey.a[1][i] <== msgMultCachedPoint.pubkey[1][i];
+        pubKey.b[0][i] <== modInvRMultPubKey2[0][i];
+        pubKey.b[1][i] <== modInvRMultPubKey2[1][i];
     }
-    
+
+    component flattenPub = FlattenPubkey(n, k);
     for (var i = 0; i < k; i++) {
-        pubKey2[0][i] === derivedPubKey2.out[0][i];
-        pubKey2[1][i] === derivedPubKey2.out[1][i];
+        flattenPub.chunkedPubkey[0][i] <== pubKey.out[0][i];
+        flattenPub.chunkedPubkey[1][i] <== pubKey.out[1][i];
     }
 
-    // Convert the public key to a single field element using Poseidon.
-    component poseidon = Poseidon(2 * k);
-    poseidon.inputs[0] <== pubKey[0][0];
-    poseidon.inputs[1] <== pubKey[0][1];
-    poseidon.inputs[2] <== pubKey[0][2];
-    poseidon.inputs[3] <== pubKey[0][3];
-    poseidon.inputs[4] <== pubKey[1][0];
-    poseidon.inputs[5] <== pubKey[1][1];
-    poseidon.inputs[6] <== pubKey[1][2];
-    poseidon.inputs[7] <== pubKey[1][3];
+    component pubKeyToAddress = PubkeyToAddress();
 
-    component inclusionProof = MerkleTreeInclusionProof(nLevels);
-    inclusionProof.leaf <== poseidon.out;
-
-    for (var i = 0; i < nLevels; i++) {
-        inclusionProof.siblings[i] <== treeSiblings[i];
-        inclusionProof.pathIndices[i] <== treePathIndices[i];
+    component pubToAddr = PubkeyToAddress();
+    for (var i = 0; i < 512; i++) {
+        pubToAddr.pubkeyBits[i] <== flattenPub.pubkeyBits[i];
     }
 
-    root <== inclusionProof.root;
+    // The address should not be revelaed in real-world applications 
+    // and should be used, for example, as a leaf of a merkle proof.
+    // This circuit outputs the address for demonstration purposes.
+    addr <== pubToAddr.address;
 }
 
-component main { public [pubKey2] } = ProofOfMembership(64, 4, 10);
+component main { public [modInvRMultPubKey2] } = PubKeyFromSecretMessage(64, 4);
