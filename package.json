@@ -2,10 +2,12 @@
   "name": "ecdsa-zk-verify",
   "version": "1.0.0",
   "license": "MIT",
+  "scripts": {},
   "dependencies": {
+    "@DanTehrani/elliptic": "https://github.com/DanTehrani/elliptic.git",
     "@ethereumjs/util": "^8.0.0",
-    "circomlib": "^2.0.5",
-    "@DanTehrani/elliptic": "https://github.com/DanTehrani/elliptic.git"
+    "axios": "^0.27.2",
+    "circomlib": "^2.0.5"
   },
   "devDependencies": {
     "eslint": "^8.23.1",

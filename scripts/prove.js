@@ -15,6 +15,9 @@ const {
   computeModInvRMultGCache,
   computeModInvRMultPubKey2
 } = require("./point-cache");
+const { downloadZKey } = require("./download-zkey");
+const fs = require("fs");
+const crypto = require("crypto");
 
 const privKey = BigInt(
   "0xf5b552f608f5b552f608f5b552f6082ff5b552f608f5b552f608f5b552f6082f"
@@ -23,12 +26,18 @@ const privKey = BigInt(
 const MSG_2 = hashPersonalMessage(Buffer.from("This message should be public"));
 
 const prove = async () => {
+  if (!fs.existsSync("circuit.zkey")) {
+    console.log("Downloading proving key...");
+    await downloadZKey();
+    console.log("...done");
+  }
+
   console.time("Full proof generation");
 
-  const secretMessage = Buffer.from(Math.random().toString());
+  const secretMessage = Buffer.from(crypto.randomBytes(32));
   const secretMessageHash = hashPersonalMessage(secretMessage);
 
-  console.log(`Signing secret message ${secretMessage}`);
+  console.log(`Signing secret message 0x${secretMessage.toString("hex")}`);
 
   const addr = privateToAddress(
     Buffer.from(privKey.toString(16), "hex")
@@ -115,6 +124,7 @@ const prove = async () => {
   }
 
   console.timeEnd("Full proof generation");
+  process.exit();
 };
 
 prove();
