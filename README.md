@@ -1,7 +1,6 @@
 # zk-ecdsa
 
-Please refer to [this Ethresearch post](https://ethresear.ch/t/efficient-ecdsa-signature-verification-using-circom/13629) for details. (Plese read [the reply](https://ethresear.ch/t/efficient-ecdsa-signature-verification-using-circom/13629/2?u=0danieltehrani) of the post as well.)
-This repo uses circuits from [circom-ecdsa](https://github.com/0xPARC/circom-ecdsa). 
+Please refer to [this Ethereum Research post](https://ethresear.ch/t/efficient-ecdsa-signature-verification-using-circom/13629) for details. The circuits in this repo uses circuits from [circom-ecdsa](https://github.com/0xPARC/circom-ecdsa).
 
 ## Install dependencies
 
