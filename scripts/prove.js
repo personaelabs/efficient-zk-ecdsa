@@ -113,8 +113,8 @@ const prove = async () => {
 
   const { publicSignals, proof } = await snarkJs.groth16.fullProve(
     input,
-    "ecdsa-verify.wasm",
-    "ecdsa_verify.zkey"
+    "circuit.wasm",
+    "circuit.zkey"
   );
 
   const derivedAddress = BigInt(publicSignals[0]).toString(16);
