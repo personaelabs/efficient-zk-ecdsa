@@ -97,6 +97,7 @@ const prove = async () => {
   const modInvRMultPubKey2 = computeModInvRMultPubKey2(r, pubKey2);
 
   const rRed = new BN(r);
+  // -(r^-1 * msg)
   const negMsgMultModInvR = rRed
     .invm(SECP256K1_N)
     .mul(new BN(secretMessageHash))
