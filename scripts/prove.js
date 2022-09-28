@@ -11,7 +11,6 @@ const defineCurve = require("@DanTehrani/elliptic").curves.defineCurve;
 const ec = new elliptic.ec("secp256k1");
 const BN = require("bn.js");
 const { splitToRegisters } = require("./utils");
-const { computeModInvRMultGCache } = require("./point-cache");
 const { downloadZKey } = require("./download-zkey");
 const fs = require("fs");
 const crypto = require("crypto");
@@ -95,21 +94,25 @@ const prove = async () => {
     throw new Error("Second the signature is invalid!");
   }
 
-  console.time("Point cache generation");
-  const modInvRMultGCache = computeModInvRMultGCache(r);
-  console.timeEnd("Point cache generation");
-
   const modInvRMultPubKey2 = computeModInvRMultPubKey2(r, pubKey2);
 
+  const rRed = new BN(r);
+  // -(r^-1 * msg)
+  const negMsgMultModInvR = rRed
+    .invm(SECP256K1_N)
+    .mul(new BN(secretMessageHash))
+    .neg()
+    .umod(SECP256K1_N);
+
   const input = {
-    msg: splitToRegisters(secretMessageHash.toString("hex")),
     modInvRMultPubKey2: [
       splitToRegisters(modInvRMultPubKey2.x),
       splitToRegisters(modInvRMultPubKey2.y)
     ],
-    modInvRMultGPreComputes: modInvRMultGCache
+    negMsgMultModInvR: splitToRegisters(negMsgMultModInvR)
   };
 
+  console.log("Proving...");
   const { publicSignals, proof } = await snarkJs.groth16.fullProve(
     input,
     "circuit.wasm",
