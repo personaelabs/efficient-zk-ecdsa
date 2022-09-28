@@ -112,6 +112,7 @@ const prove = async () => {
     negMsgMultModInvR: splitToRegisters(negMsgMultModInvR)
   };
 
+  console.log("Proving...");
   const { publicSignals, proof } = await snarkJs.groth16.fullProve(
     input,
     "circuit.wasm",
