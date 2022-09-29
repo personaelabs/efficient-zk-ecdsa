@@ -18,9 +18,9 @@ yarn run prove
 
 On a MacBook Pro
 
-| Full proving time | 25s    |
+| Full proving time | 23s    |
 | ----------------- | ------ |
-| Proving key size  | 256MB  |
-| Constraints       | 466599 |
+| Proving key size  | 221MB  |
+| Constraints       | 401319 |
 
 _When the proving is done in a browser, it might take some time to download the proving key, which is 256MB in size._
