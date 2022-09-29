@@ -18,6 +18,7 @@ yarn run prove
 
 On a MacBook Pro
 
+_Full proving time includes public key -> eth address conversion._
 | Full proving time | 23s    |
 | ----------------- | ------ |
 | Proving key size  | 221MB  |
