@@ -17,7 +17,7 @@ const splitToRegisters = value => {
     registers.unshift(BigInt(addHexPrefix(val)));
   }
 
-  return registers;
+  return registers.map(el => el.toString());
 };
 
 module.exports = {

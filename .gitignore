@@ -2,6 +2,7 @@
 /*_js/
 /node_modules
 keys/
+build/
 
 *.ptau
 *.r1cs
