@@ -8,58 +8,56 @@ include "../node_modules/circomlib/circuits/poseidon.circom";
     VerifyPubkey2 Proof
     -------------------
     Verifies that pubKey2 is correctly derived from the original pubKey, and that 
-    the signed message is indeed the Poseidon hash of the inputted message and a 
-    private salt.
+    the claimed posiedonHash is the Poseidon hash of the inputted message and a 
+    private salt. 
+    
+    Note that as Ethereum wallets attach a prefix to inputted data and keccak256 
+    hash it before signing, the actual signed msg is keccakHash. It being correctly 
+    derived from poseidonHash is checked outside of the SNARK.
+
+    msgHash and salt are both built of k n-bit registers to avoid any overflow 
+    in the field used by circom. Thus the Poseidon hash takes 2*k inputs.
 
     Public inputs:
     modInvRMultPubkey2[2][k]    r^-1 * pubKey2, computed outside SNARK
     negInvR[k]                  -r^-1, computed outside SNARK
-    msghash                     hash of the message being attested to
+    msghash[k]                  hash of the message being attested to
+    poseidonHash                claimed Poseidon(salt[k], msghash[k])
+    keccakHashMsg[k]            actual data signed by wallet, computed outside SNARK 
 
     Private inputs:
-    salt                        private salt used to keep signed message secret
+    salt[k]                     private salt used to keep signed message secret
     pubkey[2][k]                actual pubkey
 
     Outputs:
     result                      1 if pubKey2 was correctly derived, 0 if not
 */
-
 // pubkey =  pubkey2 * r^-1 - msg * r^-1 * G
 template VerifyPubkey2(n, k) {
     signal input modInvRMultPubkey2[2][k];
     signal input negInvR[k];
-    signal input msghash;
+    signal input msghash[k];
+    signal input poseidonHash;
+    signal input keccakHashMsg[k];
 
-    signal input salt;
+    signal input salt[k];
     signal input pubkey[2][k];
 
     signal output result;
 
-    // compute actual signed msg
-    component hasher = Poseidon(2);
-    hasher.inputs[0] <== salt;
-    hasher.inputs[1] <== msghash;
-
-    // convert to bucketed form
-    component bitArray = Num2Bits(256);
-    bitArray.in <== hasher.out;
-
-    component convertBack[k];
-    signal msg[k];
+    // verify poseidonHash = Poseidon(salt[k], msgHash[k])
+    component hasher = Poseidon(2*k);
     for (var idx = 0; idx < k; idx++) {
-        convertBack[idx] = Bits2Num(n);
-        for (var bit = 0; bit < n; bit++) {
-            var bit_idx = idx * n + bit;
-            convertBack[idx].in[bit] <== bitArray.out[bit_idx];
-        }
-        msg[idx] <== convertBack[idx].out;
+        hasher.inputs[idx] <== salt[idx];
+        hasher.inputs[k+idx] <== msghash[idx];
     }
+    poseidonHash === hasher.out;
 
     // compute (msg * -r^-1) mod n
     var order[100] = get_secp256k1_order(n, k);
     component g_coeff = BigMultModP(n, k);
     for (var idx = 0; idx < k; idx++) {
-        g_coeff.a[idx] <== msg[idx];
+        g_coeff.a[idx] <== keccakHashMsg[idx];
         g_coeff.b[idx] <== negInvR[idx];
         g_coeff.p[idx] <== order[idx];
     }
@@ -105,4 +103,4 @@ template VerifyPubkey2(n, k) {
     result <== res_comp.out;
 }
 
-component main { public [modInvRMultPubkey2, negInvR, msghash] } = VerifyPubkey2(64, 4);
+component main { public [modInvRMultPubkey2, negInvR, msghash, poseidonHash, keccakHashMsg] } = VerifyPubkey2(64, 4);

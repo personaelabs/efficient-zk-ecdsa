@@ -1,4 +1,4 @@
-CIRCUIT_NAME="pubkey_from_secret_message"
+CIRCUIT_NAME="verify_pubkey2"
 CIRCUIT_PATH="../circuits/$CIRCUIT_NAME.circom"
 SAMPLE_INPUT="sample_input.json"
 BUILD_DIR="../build/$CIRCUIT_NAME"

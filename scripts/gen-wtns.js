@@ -47,15 +47,23 @@ const genWtns = async () => {
     F = poseidon.F;
   }
 
-  const poseidonRes = poseidon([salt, publicMessageHash]);
-  const signMsg = F.toObject(poseidonRes);
-
-  console.log(`Signing ${signMsg}`);
-
-  const { v, r, s } = ecsign(
-    hashPersonalMessage(Buffer.from("0x" + signMsg.toString(16))),
-    privKey
+  console.log(
+    splitToRegisters(salt.toString("hex")).concat(
+      splitToRegisters(publicMessageHash.toString("hex"))
+    )
   );
+
+  const poseidonRes = poseidon(
+    splitToRegisters(salt.toString("hex")).concat(
+      splitToRegisters(publicMessageHash.toString("hex"))
+    )
+  );
+  const poseidonHash = F.toObject(poseidonRes);
+  const keccakMsgHash = hashPersonalMessage(
+    Buffer.from(poseidonHash.toString(16))
+  );
+
+  const { v, r, s } = ecsign(keccakMsgHash, privKey);
 
   /*
     If R.y is odd, then recovery_id is 1 or 3. If y is even, then recovery_id is 0 or 2.
@@ -115,13 +123,18 @@ const genWtns = async () => {
       splitToRegisters(modInvRMultPubKey2.x),
       splitToRegisters(modInvRMultPubKey2.y)
     ],
-    negInvR: splitToRegisters(negInvR),
-    msghash: splitToRegisters(publicMessageHash),
-    salt: splitToRegisters(salt),
-    pubkey: [splitToRegisters(pubkey.x), splitToRegisters(pubkey.y)]
+    negInvR: splitToRegisters(negInvR.toString("hex")),
+    msghash: splitToRegisters(publicMessageHash.toString("hex")),
+    poseidonHash: poseidonHash.toString(),
+    keccakHashMsg: splitToRegisters(keccakMsgHash.toString("hex")),
+    salt: splitToRegisters(salt.toString("hex")),
+    pubkey: [
+      splitToRegisters(pubkey.slice(0, 64)),
+      splitToRegisters(pubkey.slice(64))
+    ]
   };
 
-  console.log(input);
+  fs.writeFileSync("sample_input.json", JSON.stringify(input));
 
   //   console.log("Proving...");
   //   const { publicSignals, proof } = await snarkJs.groth16.fullProve(
