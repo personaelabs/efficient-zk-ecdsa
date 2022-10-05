@@ -1,5 +1,5 @@
-CIRCUIT_NAME="pubkey_from_secret_message.circom"
-CIRCUIT_PATH="../circuits/$CIRCUIT_NAME"
+CIRCUIT_NAME="pubkey_from_secret_message"
+CIRCUIT_PATH="../circuits/$CIRCUIT_NAME.circom"
 SAMPLE_INPUT="sample_input.json"
 BUILD_DIR="../build/$CIRCUIT_NAME"
 R1CS_FILE="$BUILD_DIR/$CIRCUIT_NAME.r1cs"
