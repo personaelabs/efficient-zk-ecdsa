@@ -20,6 +20,13 @@ const splitToRegisters = value => {
   return registers.map(el => el.toString());
 };
 
+const registersToHex = registers => {
+  return registers
+    .map(el => BigInt(el).toString(16).padStart(16, "0"))
+    .join("");
+};
+
 module.exports = {
+  registersToHex,
   splitToRegisters
 };
