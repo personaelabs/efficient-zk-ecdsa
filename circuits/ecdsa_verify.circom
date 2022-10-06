@@ -1,7 +1,7 @@
 pragma circom 2.0.6;
 include "./secp256k1_scalar_mult_cached_windowed.circom";
 
-template ECDSA(n, k) {
+template ECDSAVerify(n, k) {
     signal input s[k];
     signal input TPreComputes[32][256][2][4]; // T = r^-1 * R
     signal input U[2][k]; // -(m * r^-1 * G)
@@ -42,4 +42,4 @@ template ECDSA(n, k) {
     }
 }
 
-component main { public [TPreComputes, U] } = ECDSA(64, 4);
+component main { public [TPreComputes, U] } = ECDSAVerify(64, 4);
