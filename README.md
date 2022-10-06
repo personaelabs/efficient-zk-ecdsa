@@ -2,19 +2,19 @@
 
 Please refer to [this Ethereum Research post](https://ethresear.ch/t/efficient-ecdsa-signature-verification-using-circom/13629) for details. The circuits in this repo uses circuits from [circom-ecdsa](https://github.com/0xPARC/circom-ecdsa).
 
-### Install dependencies
+## Install dependencies
 
 ```
 yarn
 ```
 
-### Compile the circuit and generate the zkey
+## Compile the circuit and generate the zkey
 
 ```
 yarn run build:ecdsaverify
 ```
 
-### Run proof generation
+## Run proof generation
 
 ```
 yarn run run:ecdsaverify
