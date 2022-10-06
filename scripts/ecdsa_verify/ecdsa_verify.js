@@ -1,23 +1,22 @@
 const snarkJs = require("snarkjs");
 const { hashPersonalMessage, ecsign } = require("@ethereumjs/util");
-const { SECP256K1_N } = require("./config");
-const elliptic = require("@DanTehrani/elliptic");
+const { SECP256K1_N } = require("../utils/config");
+const elliptic = require("elliptic");
 const ec = new elliptic.ec("secp256k1");
 const BN = require("bn.js");
-const { splitToRegisters, registersToHex } = require("./utils");
-const { downloadZKey } = require("./download-zkey");
+const { splitToRegisters, registersToHex } = require("../utils/utils");
 const fs = require("fs");
-const { getPointPreComputes } = require("./point-cache");
+const { getPointPreComputes } = require("../utils/point-cache");
 
 const privKey = BigInt(
   "0xf5b552f608f5b552f608f5b552f6082ff5b552f608f5b552f608f5b552f6082f"
 );
 
+const ZKEY_PATH = "build/ecdsa_verify/ecdsa_verify_0.zkey";
 const prove = async () => {
-  if (!fs.existsSync("circuit.zkey")) {
-    console.log("Downloading zkey...");
-    await downloadZKey();
-    console.log("...done");
+  if (!fs.existsSync(ZKEY_PATH)) {
+    console.log("zkey not found. Please run `yarn build:ecdsaverify` first");
+    return;
   }
 
   console.time("Full proof generation");
@@ -59,8 +58,8 @@ const prove = async () => {
   console.log("Proving...");
   const { publicSignals, proof } = await snarkJs.groth16.fullProve(
     input,
-    "./ecdsa_js/ecdsa.wasm",
-    "./circuits/keys/ecdsa.zkey"
+    "build/ecdsa_verify/ecdsa_verify_js/ecdsa_verify.wasm",
+    ZKEY_PATH
   );
 
   const outputPubkeyX = registersToHex(publicSignals.slice(0, 4).reverse());
@@ -74,7 +73,7 @@ const prove = async () => {
     console.log("Output public key doesn't match original public key");
   }
 
-  process.exit();
+  process.exit(0);
 };
 
 prove();
