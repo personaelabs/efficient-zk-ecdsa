@@ -6,7 +6,7 @@ const stream = require("stream");
 const downloadZKey = async () => {
   const finishedDownload = promisify(stream.finished);
 
-  const writer = fs.createWriteStream("circuit.zkey");
+  const writer = fs.createWriteStream("ecdsa_verify.zkey");
 
   const response = await axios({
     method: "get",
