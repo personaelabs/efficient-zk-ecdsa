@@ -7,6 +7,8 @@ template ECDSA(n, k) {
     signal input U[2][k]; // -(m * r^-1 * G)
     signal output pubKey[2][k];
 
+    // s * T
+    // or, s * r^-1 * R
     component sMultT = Secp256K1ScalarMultCachedWindowed(n, k);
     var stride = 8;
     var num_strides = div_ceil(n * k, stride);
@@ -24,6 +26,8 @@ template ECDSA(n, k) {
         sMultT.scalar[i] <== s[i];
     }
 
+    // s * T + U
+    // or, s * r^-1 * R + -(m * r^-1 * G)
     component pointAdder = Secp256k1AddUnequal(n, k);
     for (var i = 0; i < k; i++) {
         pointAdder.a[0][i] <== sMultT.out[0][i];
