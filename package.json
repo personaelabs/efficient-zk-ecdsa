@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "run:ecdsaverify": "node ./scripts/ecdsa_verify/ecdsa_verify.js",
-    "build:ecdsaverify": "cd ./scripts/ecdsa_verify && sh ./build_ecdsa_verify.sh",
+    "run:ecdsa_verify": "node ./scripts/ecdsa_verify/ecdsa_verify.js",
+    "build:ecdsa_verify": "cd ./scripts/ecdsa_verify && sh ./build_ecdsa_verify.sh",
     "build:ecdsa_verify_pubkey_to_addr": "cd ./scripts/build_ecdsa_verify_pubkey_to_addr && sh ./build_ecdsa_verify_pubkey_to_addr.sh"
   },
   "dependencies": {
