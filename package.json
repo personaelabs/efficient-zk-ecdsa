@@ -4,7 +4,8 @@
   "license": "MIT",
   "scripts": {
     "run:ecdsaverify": "node ./scripts/ecdsa_verify/ecdsa_verify.js",
-    "build:ecdsaverify": "cd ./scripts/ecdsa_verify && sh ./build_ecdsa_verify.sh"
+    "build:ecdsaverify": "cd ./scripts/ecdsa_verify && sh ./build_ecdsa_verify.sh",
+    "build:ecdsa_verify_pubkey_to_addr": "cd ./scripts/build_ecdsa_verify_pubkey_to_addr && sh ./build_ecdsa_verify_pubkey_to_addr.sh"
   },
   "dependencies": {
     "@ethereumjs/util": "^8.0.0",

@@ -22,6 +22,7 @@ yarn run run:ecdsaverify
 
 ## Benchmarks
 
-| Circuit     | Constraints | Full proving time <br /> (M1 Pro MacBook Pro) | zKey size |
-| ----------- | ----------- | --------------------------------------------- | --------- |
-| ecdsaverify | 163,239     | 24s                                           | 119MB     |
+| Circuit                         | Constraints | Full proving time <br /> (M1 Pro MacBook Pro) | zKey size |
+| ------------------------------- | ----------- | --------------------------------------------- | --------- |
+| ecdsaverify                     | 163,239     | 24s                                           | 119MB     |
+| ecdsa_verify_pubkey_to_eth_addr | 466,599     | TBD                                           | 291MB     |
