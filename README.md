@@ -39,8 +39,8 @@ _The setup_:
 
 | Circuit                         | Proving time |
 | ------------------------------- | ------------ |
-| ecdsa_verify                    | 107s         |
-| ecdsa_verify_pubkey_to_eth_addr | 51s          |
+| ecdsa_verify                    | 51s          |
+| ecdsa_verify_pubkey_to_eth_addr | 107s         |
 
 ### Command line proving
 
@@ -48,7 +48,7 @@ _The setup:_
 
 - M1 Pro Macbook Pro
 
-| Circuit                         | Browser |
-| ------------------------------- | ------- |
-| ecdsa_verify                    | 18s     |
-| ecdsa_verify_pubkey_to_eth_addr | 32s     |
+| Circuit                         | Proving time |
+| ------------------------------- | ------------ |
+| ecdsa_verify                    | 18s          |
+| ecdsa_verify_pubkey_to_eth_addr | 32s          |
