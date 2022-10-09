@@ -8,20 +8,21 @@ Please refer to [this Ethereum Research post](https://ethresear.ch/t/efficient-e
 yarn
 ```
 
+## Compile the circuit and generate the zkey
+
+```
+yarn run build:ecdsaverify
+```
+
 ## Run proof generation
 
 ```
-yarn run prove
+yarn run run:ecdsaverify
 ```
 
 ## Benchmarks
 
-On a MacBook Pro
-
-_Full proving time includes public key -> eth address conversion._
-| Full proving time | 23s    |
-| ----------------- | ------ |
-| Proving key size  | 221MB  |
-| Constraints       | 401319 |
-
-_When the proving is done in a browser, it might take some time to download the proving key, which is 256MB in size._
+| Circuit                         | Constraints | Full proving time <br /> (M1 Pro MacBook Pro) | zKey size |
+| ------------------------------- | ----------- | --------------------------------------------- | --------- |
+| ecdsa_verify                    | 163,239     | 24s                                           | 119MB     |
+| ecdsa_verify_pubkey_to_eth_addr | 466,599     | 38s                                           | 291MB     |
