@@ -3,7 +3,6 @@ PHASE1=$CIRCUITS_DIR/pot20_final.ptau
 BUILD_DIR=../../build/ecdsa_verify_pubkey_to_addr
 CIRCUIT_NAME=ecdsa_verify_pubkey_to_addr
 
-<<com
 if [ -f "$PHASE1" ]; then
     echo "Found Phase 1 ptau file"
 else
@@ -29,7 +28,6 @@ start=`date +%s`
 npx snarkjs groth16 setup "$BUILD_DIR"/"$CIRCUIT_NAME".r1cs "$PHASE1" "$BUILD_DIR"/"$CIRCUIT_NAME"_0.zkey
 end=`date +%s`
 echo "DONE ($((end-start))s)"
-com
 
 echo "****GENERATING FINAL ZKEY****"
 start=`date +%s`
