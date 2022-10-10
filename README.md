@@ -24,10 +24,10 @@ yarn run run:ecdsaverify
 
 ### Circuit info
 
-| Circuit                         | Constraints | zKey size |
-| ------------------------------- | ----------- | --------- |
-| ecdsa_verify                    | 163,239     | 119MB     |
-| ecdsa_verify_pubkey_to_eth_addr | 466,599     | 291MB     |
+| Circuit                     | Constraints | zKey size |
+| --------------------------- | ----------- | --------- |
+| ecdsa_verify                | 163,239     | 119MB     |
+| ecdsa_verify_pubkey_to_addr | 466,599     | 291MB     |
 
 ### Browser proving
 
@@ -37,10 +37,10 @@ _The setup_:
 - Internet speed: 40Mbps
 - Browser: Brave browser
 
-| Circuit                         | Proving time |
-| ------------------------------- | ------------ |
-| ecdsa_verify                    | 51s          |
-| ecdsa_verify_pubkey_to_eth_addr | 107s         |
+| Circuit                     | Proving time |
+| --------------------------- | ------------ |
+| ecdsa_verify                | 51s          |
+| ecdsa_verify_pubkey_to_addr | 107s         |
 
 ### Command line proving
 
@@ -48,7 +48,7 @@ _The setup:_
 
 - M1 Pro Macbook Pro
 
-| Circuit                         | Proving time |
-| ------------------------------- | ------------ |
-| ecdsa_verify                    | 18s          |
-| ecdsa_verify_pubkey_to_eth_addr | 32s          |
+| Circuit                     | Proving time |
+| --------------------------- | ------------ |
+| ecdsa_verify                | 18s          |
+| ecdsa_verify_pubkey_to_addr | 32s          |
