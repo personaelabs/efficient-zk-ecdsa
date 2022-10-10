@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "prove": "node ./scripts/prove.js"
+    "run:ecdsa_verify": "node ./scripts/ecdsa_verify/ecdsa_verify.js",
+    "build:ecdsa_verify": "cd ./scripts/ecdsa_verify && sh ./build_ecdsa_verify.sh",
+    "build:ecdsa_verify_pubkey_to_addr": "cd ./scripts/build_ecdsa_verify_pubkey_to_addr && sh ./build_ecdsa_verify_pubkey_to_addr.sh"
   },
   "dependencies": {
-    "@DanTehrani/elliptic": "https://github.com/DanTehrani/elliptic.git",
     "@ethereumjs/util": "^8.0.0",
     "axios": "^0.27.2",
-    "circomlib": "^2.0.5"
+    "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
+    "elliptic": "^6.5.4"
   },
   "devDependencies": {
     "eslint": "^8.23.1",
