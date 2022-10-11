@@ -1,5 +1,5 @@
 {
-  "name": "ecdsa-zk-verify",
+  "name": "efficient-zk-sig",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
