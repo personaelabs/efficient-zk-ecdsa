@@ -1,5 +1,5 @@
 {
-  "name": "ecdsa-zk-verify",
+  "name": "efficient-zk-sig",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
@@ -8,13 +8,12 @@
     "build:ecdsa_verify_pubkey_to_addr": "cd ./scripts/build_ecdsa_verify_pubkey_to_addr && sh ./build_ecdsa_verify_pubkey_to_addr.sh"
   },
   "dependencies": {
-    "@ethereumjs/util": "^8.0.0",
-    "axios": "^0.27.2",
-    "circomlib": "^2.0.5",
-    "circomlibjs": "^0.1.7",
-    "elliptic": "^6.5.4"
+    "circomlib": "^2.0.5"
   },
   "devDependencies": {
+    "@ethereumjs/util": "^8.0.0",
+    "circomlibjs": "^0.1.7",
+    "elliptic": "^6.5.4",
     "eslint": "^8.23.1",
     "prettier": "^2.7.1",
     "snarkjs": "^0.4.27"

@@ -1,4 +1,4 @@
-# zk-ecdsa
+# efficient-zk-sig
 
 Please refer to [this Ethereum Research post](https://ethresear.ch/t/efficient-ecdsa-signature-verification-using-circom/13629) for details. The circuits in this repo uses circuits from [circom-ecdsa](https://github.com/0xPARC/circom-ecdsa).
 
