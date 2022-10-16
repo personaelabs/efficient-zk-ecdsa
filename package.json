@@ -13,7 +13,7 @@
   "devDependencies": {
     "@ethereumjs/util": "^8.0.0",
     "circomlibjs": "^0.1.7",
-    "elliptic": "^6.5.4",
+    "elliptic": "github:DanTehrani/elliptic",
     "eslint": "^8.23.1",
     "prettier": "^2.7.1",
     "snarkjs": "^0.4.27"
