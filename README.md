@@ -11,13 +11,13 @@ yarn
 ## Compile the circuit and generate the zkey
 
 ```
-yarn run build:ecdsaverify
+yarn run build:ecdsa_verify
 ```
 
 ## Run proof generation
 
 ```
-yarn run run:ecdsaverify
+yarn run run:ecdsa_verify
 ```
 
 ## Benchmarks
