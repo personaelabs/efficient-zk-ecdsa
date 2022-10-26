@@ -1,4 +1,4 @@
-const elliptic = require("@DanTehrani/elliptic");
+const elliptic = require("elliptic");
 const ec = new elliptic.ec("secp256k1");
 const BN = require("bn.js");
 const { splitToRegisters } = require("./utils");
