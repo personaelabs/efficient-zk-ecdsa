@@ -12,10 +12,10 @@ const privKey = BigInt(
   "0xf5b552f608f5b552f608f5b552f6082ff5b552f608f5b552f608f5b552f6082f"
 );
 
-const ZKEY_PATH = "build/ecdsa_verify/ecdsa_verify_0.zkey";
+const ZKEY_PATH = "build/ecdsa_verify/build_ecdsa_verify.zkey";
 const prove = async () => {
   if (!fs.existsSync(ZKEY_PATH)) {
-    console.log("zkey not found. Please run `yarn build:ecdsaverify` first");
+    console.log("zkey not found. Please run `yarn build:ecdsa_verify` first");
     return;
   }
 
@@ -58,7 +58,7 @@ const prove = async () => {
   console.log("Proving...");
   const { publicSignals, proof } = await snarkJs.groth16.fullProve(
     input,
-    "build/ecdsa_verify/ecdsa_verify_js/ecdsa_verify.wasm",
+    "build/ecdsa_verify/build_ecdsa_verify_js/build_ecdsa_verify.wasm",
     ZKEY_PATH
   );
 
