@@ -1,7 +1,7 @@
 CIRCUITS_DIR=../../circuits
 PHASE1=$CIRCUITS_DIR/pot20_final.ptau
 BUILD_DIR=../../build/ecdsa_verify_pubkey_to_addr
-CIRCUIT_NAME=ecdsa_verify_pubkey_to_addr
+CIRCUIT_NAME=build_ecdsa_verify_pubkey_to_addr
 
 if [ -f "$PHASE1" ]; then
     echo "Found Phase 1 ptau file"
@@ -18,7 +18,7 @@ fi
 echo "****COMPILING CIRCUIT****"
 start=`date +%s`
 set -x
-circom "$CIRCUITS_DIR/$CIRCUIT_NAME".circom --r1cs --wasm --sym --c --wat --output "$BUILD_DIR"
+circom "./$CIRCUIT_NAME".circom --r1cs --wasm --sym --c --wat --output "$BUILD_DIR"
 { set +x; } 2>/dev/null
 end=`date +%s`
 echo "DONE ($((end-start))s)"
