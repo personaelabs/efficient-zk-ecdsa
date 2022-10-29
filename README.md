@@ -20,6 +20,18 @@ yarn run build:ecdsaverify
 yarn run run:ecdsaverify
 ```
 
+## Run benchmarks
+
+```
+cd ./bench
+```
+
+```
+open ./index.html
+```
+
+_The full proof and the proving time will be displayed in the browser console._
+
 ## Benchmarks
 
 ### Circuit info
