@@ -1,4 +1,4 @@
-# efficient-zk-sig
+# efficient-zk-ecdsa
 
 _The code in this repo is unaudited and not recommended for production use._
 
