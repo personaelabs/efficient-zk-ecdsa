@@ -1,8 +1,16 @@
 
 /*_js/
-/node_modules
+node_modules/
 keys/
 build/
+target/
+
+halo2/
+packages/halo2/*.png
+packages/halo2/*.vkey
+
+.next/
+next-env.d.ts
 
 *.ptau
 *.r1cs
