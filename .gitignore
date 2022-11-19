@@ -5,7 +5,6 @@ keys/
 build/
 target/
 
-halo2/
 packages/halo2/*.png
 packages/halo2/*.vkey
 
