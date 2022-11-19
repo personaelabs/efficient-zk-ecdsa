@@ -1,6 +1,6 @@
 # efficient-zk-ecdsa in halo2
 
-Using zcash's halo2 proving system to implement efficient ECDSA proofs, as formulated by Dan Tehrani in https://ethresear.ch/t/efficient-ecdsa-signature-verification-using-circom/13629
+Using zcash's halo2 proving system to implement efficient ECDSA proofs
 
 ## Running browser proving
 
