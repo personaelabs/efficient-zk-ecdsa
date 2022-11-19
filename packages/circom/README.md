@@ -1,4 +1,4 @@
-# efficient-zk-ecdsa Circom implementation
+# efficient-zk-ecdsa in circom
 
 ## Install dependencies
 
