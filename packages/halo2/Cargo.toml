@@ -7,12 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-halo2_proofs = { git = "https://github.com/axiom-crypto/halo2", branch = "axiom/add-serialization" }
-
-#halo2wrong
-ecc = { git = "https://github.com/personaelabs/halo2wrong" } 
-maingate = { git = "https://github.com/personaelabs/halo2wrong" } 
-integer = { git = "https://github.com/personaelabs/halo2wrong" }
+halo2_proofs = { git = "https://github.com/personaelabs/halo2-secp" }
 
 num-bigint = { version = "0.4", features = ["rand"] }
 ff = "0.12.0"
