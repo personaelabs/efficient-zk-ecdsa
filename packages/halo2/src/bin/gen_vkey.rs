@@ -1,3 +1,4 @@
+/*
 use halo2_efficient_ecdsa::{
     circuits::precompute_circuit::EfficientECDSAPrecomputeCircuit,
     ecdsa_helper::{bn_256_vkeygen, generate_precompute_input},
@@ -39,4 +40,8 @@ fn main() {
     let mut v_key_file = std::fs::File::create("./vk.vkey").unwrap();
     let vk = bn_256_vkeygen(&kzg_params, &circuit);
     vk.write(&mut v_key_file).unwrap();
+}
+ */
+fn main() {
+    
 }
