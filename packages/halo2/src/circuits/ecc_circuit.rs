@@ -7,7 +7,7 @@ use halo2_gadgets::ecc::{
 };
 use halo2_gadgets::utilities::lookup_range_check::LookupRangeCheckConfig;
 use halo2_gadgets::utilities::UtilitiesInstructions;
-use halo2_proofs::arithmetic::Field;
+use halo2_proofs::arithmetic::{Field, FieldExt};
 use halo2_proofs::circuit::{Chip, Layouter, SimpleFloorPlanner, Value};
 use halo2_proofs::pasta::group::{Curve, Group};
 use halo2_proofs::pasta::pallas;
@@ -66,7 +66,7 @@ impl Circuit<pallas::Base> for EccCircuit {
         // Load lookup table for range check
         chip.config().lookup_config.load(&mut layouter)?;
 
-        let p_val = pallas::Point::random(rand::rngs::OsRng).to_affine(); // P
+        let p_val = pallas::Point::generator().to_affine();
         let p = NonIdentityPoint::new(
             chip.clone(),
             layouter.namespace(|| "P"),
@@ -74,21 +74,24 @@ impl Circuit<pallas::Base> for EccCircuit {
         )?;
 
         let column = chip.config().advices[0];
-        let scalar_val = pallas::Base::random(OsRng);
+        let one_val = pallas::Base::one();
 
-        let scalar = chip.load_private(
+        let one = chip.load_private(
             layouter.namespace(|| "random scalar"),
             column,
-            Value::known(scalar_val),
+            Value::known(one_val),
         )?;
 
-        let scalar = ScalarVar::from_base(
+        let one = ScalarVar::from_base(
             chip.clone(),
             layouter.namespace(|| "ScalarVar from_base"),
-            &scalar,
+            &one,
         )?;
 
-        p.mul(layouter.namespace(|| "ScalarVar mul"), scalar)?;
+        // 1 * G
+        let result = p.mul(layouter.namespace(|| "ScalarVar mul"), one)?;
+
+        result.0.constrain_equal(layouter, &p)?;
 
         Ok(())
     }
