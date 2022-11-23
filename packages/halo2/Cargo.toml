@@ -10,8 +10,8 @@ crate-type = ["cdylib", "rlib"]
 #halo2_proofs = { git = "https://github.com/personaelabs/halo2-secp" }
 #halo2_gadgets = { git = "https://github.com/personaelabs/halo2-secp" }
 
-halo2_proofs = { git = "https://github.com/zcash/halo2.git" }
-halo2_gadgets = { git = "https://github.com/zcash/halo2.git"}
+halo2_proofs = { git = "https://github.com/DanTehrani/halo2.git" }
+halo2_gadgets = { git = "https://github.com/DanTehrani/halo2.git"}
 
 num-bigint = { version = "0.4", features = ["rand"] }
 ff = "0.12.0"
