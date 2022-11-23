@@ -13,6 +13,18 @@ const privKey = BigInt(
 );
 
 const ZKEY_PATH = "build/ecdsa_verify/build_ecdsa_verify.zkey";
+const VKEY_PATH = "build/ecdsa_verify/verification_key.json";
+
+const verify = async (proof, publicSignals) => {
+  const vKey = JSON.parse(fs.readFileSync(VKEY_PATH));
+  const result = await snarkJs.groth16.verify(vKey, publicSignals, proof);
+  if (result) {
+    console.log("Proof verified!");
+  } else {
+    console.log("Proof verification failed");
+  }
+};
+
 const prove = async () => {
   if (!fs.existsSync(ZKEY_PATH)) {
     console.log("zkey not found. Please run `yarn build:ecdsa_verify` first");
@@ -72,6 +84,9 @@ const prove = async () => {
   } else {
     console.log("Output public key doesn't match original public key");
   }
+
+  // Now, verify the proof
+  await verify(proof, publicSignals);
 
   process.exit(0);
 };
