@@ -34,3 +34,10 @@ start=`date +%s`
 NODE_OPTIONS="--max-old-space-size=56000" npx snarkjs zkey beacon "$BUILD_DIR"/"$CIRCUIT_NAME"_0.zkey "$BUILD_DIR"/"$CIRCUIT_NAME".zkey 12FE2EC467BD428DD0E966A6287DE2AF8DE09C2C5C0AD902B2C666B0895ABB75 10 -n="Final Beacon phase2"
 end=`date +%s`
 echo "DONE ($((end-start))s)"
+
+echo "****GENERATING VERIFICATION KEY****"
+start=`date +%s`
+NODE_OPTIONS="--max-old-space-size=56000" npx snarkjs zkey export verificationkey  "$BUILD_DIR"/"$CIRCUIT_NAME".zkey "$BUILD_DIR"/verification_key.json
+
+end=`date +%s`
+echo "DONE ($((end-start))s)"

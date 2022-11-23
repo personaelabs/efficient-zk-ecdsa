@@ -1,5 +1,9 @@
 const snarkJs = require("snarkjs");
-const { hashPersonalMessage, ecsign } = require("@ethereumjs/util");
+const {
+  hashPersonalMessage,
+  ecsign,
+  publicToAddress
+} = require("@ethereumjs/util");
 const { SECP256K1_N } = require("../utils/config");
 const elliptic = require("elliptic");
 const ec = new elliptic.ec("secp256k1");
@@ -12,12 +16,19 @@ const privKey = BigInt(
   "0xf5b552f608f5b552f608f5b552f6082ff5b552f608f5b552f608f5b552f6082f"
 );
 
-const ZKEY_PATH = "build/ecdsa_verify/build_ecdsa_verify.zkey";
-const VKEY_PATH = "build/ecdsa_verify/verification_key.json";
+const ZKEY_PATH =
+  "build/ecdsa_verify_pubkey_to_addr/build_ecdsa_verify_pubkey_to_addr.zkey";
+const VKEY_PATH = "build/ecdsa_verify_pubkey_to_addr/verification_key.json";
 
 const verify = async (proof, publicSignals) => {
   const vKey = JSON.parse(fs.readFileSync(VKEY_PATH));
-  const result = await snarkJs.groth16.verify(vKey, publicSignals, proof);
+  const result = await snarkJs.groth16.verify(
+    vKey,
+    publicSignals,
+    proof,
+    console
+  );
+  console.log("Verification result:", result);
   if (result) {
     console.log("Proof verified!");
   } else {
@@ -27,7 +38,9 @@ const verify = async (proof, publicSignals) => {
 
 const prove = async () => {
   if (!fs.existsSync(ZKEY_PATH)) {
-    console.log("zkey not found. Please run `yarn build:ecdsa_verify` first");
+    console.log(
+      "zkey not found. Please run `yarn build:ecdsa_verify_pubkey_to_addr` first"
+    );
     return;
   }
 
@@ -36,7 +49,15 @@ const prove = async () => {
   const msgHash = hashPersonalMessage(Buffer.from("hello world"));
 
   const pubKey = ec.keyFromPrivate(privKey.toString(16)).getPublic();
+  console.log("pubKey", pubKey.encode("hex"));
+  /*
+  console.log(
+    "Expected address",
+    publicToAddress(Buffer.from("0x" + pubKey.encode("hex")))
+  );
+  */
 
+  console.log({ publKey: pubKey.encode("hex") });
   const { v, r, s } = ecsign(msgHash, privKey);
 
   const isYOdd = (v - BigInt(27)) % BigInt(2);
@@ -70,20 +91,14 @@ const prove = async () => {
   console.log("Proving...");
   const { publicSignals, proof } = await snarkJs.groth16.fullProve(
     input,
-    "build/ecdsa_verify/build_ecdsa_verify_js/build_ecdsa_verify.wasm",
+    "build/ecdsa_verify_pubkey_to_addr/build_ecdsa_verify_pubkey_to_addr_js/build_ecdsa_verify_pubkey_to_addr.wasm",
     ZKEY_PATH
   );
 
-  const outputPubkeyX = registersToHex(publicSignals.slice(0, 4).reverse());
-  const outputPubkeyY = registersToHex(publicSignals.slice(4, 8).reverse());
-  const outputPubKey = `${outputPubkeyX}${outputPubkeyY}`;
+  const address = publicSignals[0];
 
-  if (`04${outputPubKey}` === pubKey.encode("hex")) {
-    console.log("Success!");
-    console.timeEnd("Full proof generation");
-  } else {
-    console.log("Output public key doesn't match original public key");
-  }
+  console.log("Address:", address);
+  console.log("publicSignals", publicSignals);
 
   // Now, verify the proof
   await verify(proof, publicSignals);

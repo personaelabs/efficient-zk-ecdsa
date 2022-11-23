@@ -37,8 +37,6 @@ template ECDSAVerifyPubKeyToAddr(n, k) {
         flattenPub.chunkedPubkey[1][i] <== ecdsaVerify.pubKey[1][i];
     }
 
-    component pubKeyToAddress = PubkeyToAddress();
-
     component pubToAddr = PubkeyToAddress();
     for (var i = 0; i < 512; i++) {
         pubToAddr.pubkeyBits[i] <== flattenPub.pubkeyBits[i];
