@@ -1,4 +1,3 @@
-use halo2_proofs::halo2curves::secp256k1::Secp256k1Affine;
 // wasm_bindgen_rayon requires the rustflags defined in .cargo/config
 // to be set in order to compile. When we enable rustflags,
 // rust-analyzer (the vscode extension) stops working, so by default,
@@ -6,16 +5,13 @@ use halo2_proofs::halo2curves::secp256k1::Secp256k1Affine;
 #[cfg(target_family = "wasm")]
 pub use wasm_bindgen_rayon::init_thread_pool;
 
-use crate::circuits::precompute_circuit::EfficientECDSAPrecomputeCircuit;
-use console_error_panic_hook;
+use crate::circuits::ecc_circuit::EccCircuit;
 
-use halo2_proofs::pasta::{Eq, EqAffine, Fp};
-use halo2_proofs::plonk::{
-    create_proof, keygen_pk, keygen_vk, verify_proof, Advice, Assigned, BatchVerifier, Circuit,
-    Column, ConstraintSystem, Error, Fixed, SingleVerifier, TableColumn, VerificationStrategy,
-};
+use halo2_proofs::pasta::EqAffine;
+use halo2_proofs::plonk::{create_proof, keygen_pk, keygen_vk, verify_proof, SingleVerifier};
+use halo2_proofs::poly::commitment::Params;
+use halo2_proofs::transcript::{Blake2bRead, Blake2bWrite, Challenge255};
 
-use js_sys::Uint8Array;
 use rand_core::OsRng;
 use serde_wasm_bindgen;
 use std::io::BufReader;
@@ -36,86 +32,37 @@ pub fn init_panic_hook() {
 }
 
 #[wasm_bindgen]
-pub fn prove(v_key_ser: JsValue, params_ser: JsValue) -> JsValue {
-    web_sys::console::time_with_label("kzg params setup");
-    let params_vec = Uint8Array::new(&params_ser).to_vec();
-    let params = ParamsKZG::<Bn256>::read(&mut BufReader::new(&params_vec[..])).unwrap();
+pub fn prove_scalar_mult() -> JsValue {
+    let empty_circuit = EccCircuit {};
 
-    let vk_vec = Uint8Array::new(&v_key_ser).to_vec();
-
-    web_sys::console::time_end_with_label("kzg params setup");
-
-    let input = generate_precompute_input();
-    let aux_generator = <Secp256k1Affine as CurveAffine>::CurveExt::random(OsRng).to_affine();
-
-    let efficient_ecdsa_circuit = EfficientECDSAPrecomputeCircuit::<Secp256k1Affine, Fr> {
-        aux_generator,
-        window_size: 4,
-        public_key: input.public_key,
-        t_powers: input.t_powers,
-        u: input.u,
-        s: input.s,
-        ..Default::default()
-    };
-
-    let vk =
-        bn_256_read_vkey::<EfficientECDSAPrecomputeCircuit<Secp256k1Affine, Fr>>(&vk_vec, &params);
-
-    web_sys::console::time_with_label("pkey generation");
-    let pk = bn_256_pkeygen(&params, vk, &efficient_ecdsa_circuit);
-    web_sys::console::time_end_with_label("pkey generation");
-
-    web_sys::console::time_with_label("proving");
-    let proof = bn_256_prove(efficient_ecdsa_circuit, &params, &[&[&[]]], &pk);
-    web_sys::console::time_end_with_label("proving");
-
-    log!("Proof generated!");
-
-    serde_wasm_bindgen::to_value(&proof).unwrap()
-}
-
-#[wasm_bindgen]
-pub fn verify(proof_ser: JsValue, params_ser: JsValue) -> JsValue {
-    let params_vec = Uint8Array::new(&params_ser).to_vec();
-    let params: ParamsVerifierKZG<Bn256> =
-        Params::<G1Affine>::read(&mut BufReader::new(&params_vec[..])).unwrap();
-
-    let proof = serde_wasm_bindgen::from_value::<Vec<u8>>(proof_ser).unwrap();
-
-    let empty_circuit = EfficientECDSAPrecomputeCircuit::<Secp256k1Affine, Fr> {
-        ..Default::default()
-    };
-
-    let vk = keygen_vk(&params, &empty_circuit).expect("keygen_vk should not fail");
-
-    let result = bn_256_verify(&proof, &params, &vk, &[&[&[]]]);
-    serde_wasm_bindgen::to_value(&proof).unwrap()
-}
-
-#[wasm_bindgen]
-pub fn ecc_scalar_mult_prove() -> JsValue {
-    let much_too_small_params: Params<EqAffine> = Params::new(1);
+    let k = 11;
+    let params: Params<EqAffine> = Params::new(k);
 
     web_sys::console::time_with_label("vkey generation");
     let vk = keygen_vk(&params, &empty_circuit).expect("keygen_vk should not fail");
     web_sys::console::time_end_with_label("vkey generation");
 
-    web_sys::console::time_with_label("pkey generation");
+    web_sys::console::time_with_label("vkey generation");
     let pk = keygen_pk(&params, vk, &empty_circuit).expect("keygen_pk should not fail");
     web_sys::console::time_end_with_label("pkey generation");
 
+    let circuit = EccCircuit {};
+
     let mut transcript = Blake2bWrite::<_, _, Challenge255<_>>::init(vec![]);
-    // Create a proof
+
+    web_sys::console::time_with_label("proof generation");
     create_proof(
         &params,
         &pk,
-        &[circuit.clone(), circuit.clone()],
-        &[&[&[instance]], &[&[instance]]],
+        &[circuit.clone()],
+        &[&[]],
         OsRng,
         &mut transcript,
     )
     .expect("proof generation should not fail");
+
     let proof: Vec<u8> = transcript.finalize();
+    web_sys::console::time_end_with_label("proof generation");
 
     serde_wasm_bindgen::to_value(&proof).unwrap()
 }
