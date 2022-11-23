@@ -9,14 +9,10 @@ pub use wasm_bindgen_rayon::init_thread_pool;
 use crate::circuits::precompute_circuit::EfficientECDSAPrecomputeCircuit;
 use console_error_panic_hook;
 
-use halo2_proofs::poly::commitment::Params;
-use halo2_proofs::poly::kzg::commitment::{ParamsKZG, ParamsVerifierKZG};
-use halo2_proofs::{
-    arithmetic::CurveAffine,
-    halo2curves::bn256::{Bn256, Fr, G1Affine},
-    halo2curves::group::{Curve, Group},
-    plonk::*,
-    transcript::{Blake2bRead, Challenge255, TranscriptReadBuffer},
+use halo2_proofs::pasta::{Eq, EqAffine, Fp};
+use halo2_proofs::plonk::{
+    create_proof, keygen_pk, keygen_vk, verify_proof, Advice, Assigned, BatchVerifier, Circuit,
+    Column, ConstraintSystem, Error, Fixed, SingleVerifier, TableColumn, VerificationStrategy,
 };
 
 use js_sys::Uint8Array;
@@ -25,13 +21,6 @@ use serde_wasm_bindgen;
 use std::io::BufReader;
 use wasm_bindgen::prelude::*;
 
-use halo2_proofs::poly::kzg::{
-    commitment::KZGCommitmentScheme, multiopen::VerifierSHPLONK, strategy::SingleStrategy,
-};
-
-use crate::ecdsa_helper::{
-    bn_256_pkeygen, bn_256_prove, bn_256_read_vkey, bn_256_verify, generate_precompute_input,
-};
 use web_sys;
 
 // A macro to provide `println!(..)`-style syntax for `console.log` logging.
@@ -100,5 +89,33 @@ pub fn verify(proof_ser: JsValue, params_ser: JsValue) -> JsValue {
     let vk = keygen_vk(&params, &empty_circuit).expect("keygen_vk should not fail");
 
     let result = bn_256_verify(&proof, &params, &vk, &[&[&[]]]);
+    serde_wasm_bindgen::to_value(&proof).unwrap()
+}
+
+#[wasm_bindgen]
+pub fn ecc_scalar_mult_prove() -> JsValue {
+    let much_too_small_params: Params<EqAffine> = Params::new(1);
+
+    web_sys::console::time_with_label("vkey generation");
+    let vk = keygen_vk(&params, &empty_circuit).expect("keygen_vk should not fail");
+    web_sys::console::time_end_with_label("vkey generation");
+
+    web_sys::console::time_with_label("pkey generation");
+    let pk = keygen_pk(&params, vk, &empty_circuit).expect("keygen_pk should not fail");
+    web_sys::console::time_end_with_label("pkey generation");
+
+    let mut transcript = Blake2bWrite::<_, _, Challenge255<_>>::init(vec![]);
+    // Create a proof
+    create_proof(
+        &params,
+        &pk,
+        &[circuit.clone(), circuit.clone()],
+        &[&[&[instance]], &[&[instance]]],
+        OsRng,
+        &mut transcript,
+    )
+    .expect("proof generation should not fail");
+    let proof: Vec<u8> = transcript.finalize();
+
     serde_wasm_bindgen::to_value(&proof).unwrap()
 }

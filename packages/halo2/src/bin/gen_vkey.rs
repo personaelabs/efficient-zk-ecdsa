@@ -42,6 +42,4 @@ fn main() {
     vk.write(&mut v_key_file).unwrap();
 }
  */
-fn main() {
-    
-}
+fn main() {}
