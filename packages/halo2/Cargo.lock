@@ -633,7 +633,7 @@ dependencies = [
 [[package]]
 name = "halo2_gadgets"
 version = "0.2.0"
-source = "git+https://github.com/DanTehrani/halo2.git#ec9dcefe9103fc23c13e8195120419d4d2f232a6"
+source = "git+https://github.com/DanTehrani/halo2.git#1b52634f69f0df273910a8667a351dd12f7e499b"
 dependencies = [
  "arrayvec",
  "bitvec",
@@ -650,7 +650,7 @@ dependencies = [
 [[package]]
 name = "halo2_proofs"
 version = "0.2.0"
-source = "git+https://github.com/DanTehrani/halo2.git#ec9dcefe9103fc23c13e8195120419d4d2f232a6"
+source = "git+https://github.com/DanTehrani/halo2.git#1b52634f69f0df273910a8667a351dd12f7e499b"
 dependencies = [
  "blake2b_simd",
  "ff",
