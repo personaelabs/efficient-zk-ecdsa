@@ -7,16 +7,16 @@ use halo2_proofs::pasta::pallas;
 use lazy_static::lazy_static;
 use pasta_curves::group::ff::PrimeField;
 use pasta_curves::group::{Curve, Group};
-use std::fmt::{Debug, Formatter};
+use std::fmt::Debug;
 
 #[derive(Debug, Eq, PartialEq, Clone)]
-pub(crate) struct TestFixedBases;
+pub struct TestFixedBases;
 #[derive(Debug, Eq, PartialEq, Clone)]
-pub(crate) struct FullWidth(pallas::Affine, &'static [(u64, [pallas::Base; H])]);
+pub struct FullWidth(pallas::Affine, &'static [(u64, [pallas::Base; H])]);
 #[derive(Debug, Eq, PartialEq, Clone)]
-pub(crate) struct BaseField;
+pub struct BaseField;
 #[derive(Debug, Eq, PartialEq, Clone)]
-pub(crate) struct Short;
+pub struct Short;
 
 lazy_static! {
     static ref BASE: pallas::Affine = pallas::Point::generator().to_affine();
@@ -27,11 +27,11 @@ lazy_static! {
 }
 
 impl FullWidth {
-    pub(crate) fn from_pallas_generator() -> Self {
+    pub fn from_pallas_generator() -> Self {
         FullWidth(*BASE, &ZS_AND_US)
     }
 
-    pub(crate) fn from_parts(
+    pub fn from_parts(
         base: pallas::Affine,
         zs_and_us: &'static [(u64, [pallas::Base; H])],
     ) -> Self {
