@@ -49,15 +49,7 @@ const prove = async () => {
   const msgHash = hashPersonalMessage(Buffer.from("hello world"));
 
   const pubKey = ec.keyFromPrivate(privKey.toString(16)).getPublic();
-  console.log("pubKey", pubKey.encode("hex"));
-  /*
-  console.log(
-    "Expected address",
-    publicToAddress(Buffer.from("0x" + pubKey.encode("hex")))
-  );
-  */
 
-  console.log({ publKey: pubKey.encode("hex") });
   const { v, r, s } = ecsign(msgHash, privKey);
 
   const isYOdd = (v - BigInt(27)) % BigInt(2);
@@ -96,9 +88,6 @@ const prove = async () => {
   );
 
   const address = publicSignals[0];
-
-  console.log("Address:", address);
-  console.log("publicSignals", publicSignals);
 
   // Now, verify the proof
   await verify(proof, publicSignals);
