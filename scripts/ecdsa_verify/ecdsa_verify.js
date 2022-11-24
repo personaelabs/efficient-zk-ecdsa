@@ -82,7 +82,7 @@ const prove = async () => {
     console.log("Success!");
     console.timeEnd("Full proof generation");
   } else {
-    console.log("Output public key doesn't match original public key");
+    console.log("Output public key doesn't match expected public key");
   }
 
   // Now, verify the proof
