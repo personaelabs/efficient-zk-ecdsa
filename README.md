@@ -41,7 +41,7 @@ _The full proof and the proving time will be displayed in the browser console._
 | Circuit                     | Constraints | zKey size |
 | --------------------------- | ----------- | --------- |
 | ecdsa_verify                | 163,239     | 119MB     |
-| ecdsa_verify_pubkey_to_addr | 466,599     | 291MB     |
+| ecdsa_verify_pubkey_to_addr | 315,175     | 197MB     |
 
 ### Browser proving
 
