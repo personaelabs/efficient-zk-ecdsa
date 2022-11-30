@@ -28,7 +28,7 @@ const verify = async (proof, publicSignals) => {
     proof,
     console
   );
-  console.log("Verification result:", result);
+
   if (result) {
     console.log("Proof verified!");
   } else {
@@ -49,15 +49,13 @@ const prove = async () => {
   const msgHash = hashPersonalMessage(Buffer.from("hello world"));
 
   const pubKey = ec.keyFromPrivate(privKey.toString(16)).getPublic();
-  console.log("pubKey", pubKey.encode("hex"));
-  /*
-  console.log(
-    "Expected address",
-    publicToAddress(Buffer.from("0x" + pubKey.encode("hex")))
-  );
-  */
 
-  console.log({ publKey: pubKey.encode("hex") });
+  const address = BigInt(
+    `0x${publicToAddress(
+      Buffer.from(pubKey.encode("hex").substring(2), "hex")
+    ).toString("hex")}`
+  );
+
   const { v, r, s } = ecsign(msgHash, privKey);
 
   const isYOdd = (v - BigInt(27)) % BigInt(2);
@@ -95,10 +93,14 @@ const prove = async () => {
     ZKEY_PATH
   );
 
-  const address = publicSignals[0];
+  const outputAddress = publicSignals[0];
 
-  console.log("Address:", address);
-  console.log("publicSignals", publicSignals);
+  if (outputAddress === address.toString(10)) {
+    console.log("Success!");
+    console.timeEnd("Full proof generation");
+  } else {
+    console.log("Output address doesn't match the expected address");
+  }
 
   // Now, verify the proof
   await verify(proof, publicSignals);

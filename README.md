@@ -36,25 +36,27 @@ _The full proof and the proving time will be displayed in the browser console._
 
 ## Benchmarks
 
+_Disclaimer: the following benchmarks are to give an intuition about the proving time of this method. We hope to run a more comprehensive benchmark across many devices soon._
+
 ### Circuit info
 
 | Circuit                     | Constraints | zKey size |
 | --------------------------- | ----------- | --------- |
 | ecdsa_verify                | 163,239     | 119MB     |
-| ecdsa_verify_pubkey_to_addr | 466,599     | 291MB     |
+| ecdsa_verify_pubkey_to_addr | 315,175     | 197MB     |
 
 ### Browser proving
 
 _The setup_:
 
 - M1 Pro Macbook Pro
-- Internet speed: 40Mbps
+- Internet speed: 170Mbps
 - Browser: Brave browser
 
 | Circuit                     | Proving time |
 | --------------------------- | ------------ |
-| ecdsa_verify                | 51s          |
-| ecdsa_verify_pubkey_to_addr | 107s         |
+| ecdsa_verify                | 40s          |
+| ecdsa_verify_pubkey_to_addr | 45s          |
 
 ### Command line proving
 
@@ -65,4 +67,4 @@ _The setup:_
 | Circuit                     | Proving time |
 | --------------------------- | ------------ |
 | ecdsa_verify                | 18s          |
-| ecdsa_verify_pubkey_to_addr | 32s          |
+| ecdsa_verify_pubkey_to_addr | 30s          |
