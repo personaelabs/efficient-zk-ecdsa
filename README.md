@@ -36,6 +36,8 @@ _The full proof and the proving time will be displayed in the browser console._
 
 ## Benchmarks
 
+_Disclaimer: the following benchmarks are to give an intuition about the proving time of this method. We hope to run a more comprehensive benchmark across many devices soon._
+
 ### Circuit info
 
 | Circuit                     | Constraints | zKey size |
