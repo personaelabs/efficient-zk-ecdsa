@@ -1,11 +1,13 @@
 {
-  "name": "efficient-zk-sig",
+  "name": "efficient-zk-ecdsa",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "run:ecdsa_verify": "node ./scripts/ecdsa_verify/ecdsa_verify.js",
+    "run:ecdsa_verify": "node ./scripts/build_ecdsa_verify/ecdsa_verify.js",
+    "run:ecdsa_verify_no_precompute": "node ./scripts/build_ecdsa_verify_no_precompute/ecdsa_verify_no_precompute.js",
     "run:ecdsa_verify_pubkey_to_addr": "node ./scripts/build_ecdsa_verify_pubkey_to_addr/ecdsa_verify_pubkey_to_addr.js",
-    "build:ecdsa_verify": "cd ./scripts/ecdsa_verify && sh ./build_ecdsa_verify.sh",
+    "build:ecdsa_verify": "cd ./scripts/build_ecdsa_verify && sh ./build_ecdsa_verify.sh",
+    "build:ecdsa_verify_no_precompute": "cd ./scripts/build_ecdsa_verify_no_precompute && sh ./build_ecdsa_verify_no_precompute.sh",
     "build:ecdsa_verify_pubkey_to_addr": "cd ./scripts/build_ecdsa_verify_pubkey_to_addr && sh ./build_ecdsa_verify_pubkey_to_addr.sh"
   },
   "dependencies": {
