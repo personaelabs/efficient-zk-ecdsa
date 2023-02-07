@@ -1,4 +1,9 @@
 # efficient-zk-ecdsa
+### ⚠️ This repo is no longer maintained⚠️
+### We recommend [spartan-ecdsa](https://github.com/personaelabs/spartan-ecdsa) as a replacement
+
+
+
 
 _The code in this repo is unaudited and not recommended for production use._
 
