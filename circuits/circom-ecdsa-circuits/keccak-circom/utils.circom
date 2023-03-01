@@ -1,8 +1,7 @@
-pragma circom 2.0.2;
+// Keccak256 hash function (ethereum version).
+// For LICENSE check https://github.com/vocdoni/keccak256-circom/blob/master/LICENSE
 
-include "../../../node_modules/circomlib/circuits/gates.circom";
-include "../../../node_modules/circomlib/circuits/sha256/xor3.circom";
-include "../../../node_modules/circomlib/circuits/sha256/shift.circom"; // contains ShiftRight
+pragma circom 2.0.0;
 
 template Xor5(n) {
     signal input a[n];
@@ -12,7 +11,7 @@ template Xor5(n) {
     signal input e[n];
     signal output out[n];
     var i;
-    
+
     component xor3 = Xor3(n);
     for (i=0; i<n; i++) {
         xor3.a[i] <== a[i];
