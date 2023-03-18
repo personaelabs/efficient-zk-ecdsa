@@ -6,8 +6,8 @@ const { STRIDE, NUM_STRIDES } = require("./config");
 
 const getPointPreComputes = point => {
   const keyPoint = ec.keyFromPublic({
-    x: Buffer.from(point.x.toString(16), "hex"),
-    y: Buffer.from(point.y.toString(16), "hex")
+    x: Buffer.from(point.x.toString(16).padStart(64, 0), "hex"),
+    y: Buffer.from(point.y.toString(16).padStart(64, 0), "hex")
   });
 
   const gPowers = []; // [32][256][2][4]
